@@ -1,4 +1,4 @@
-# PrivacyForge
+# PRIVACYFORGE
 
 > **Your data. Your browser. Zero exposure.**
 
@@ -10,7 +10,7 @@ A privacy-first, client-side PII detection and data sanitization platform built 
 
 Organizations, engineers, and support teams frequently paste logs, customer support tickets, resumes, and CSV exports into external tools or share them across teams—inadvertently exposing personally identifiable information (PII) and financial identifiers.
 
-**PrivacyForge** solves this by detecting, classifying, inspecting, and sanitizing sensitive entities **entirely inside the user's browser memory** using deterministic JavaScript validators, an RFC 4180 structure-preserving CSV processor, and client-side Blob exports.
+**PRIVACYFORGE** provides a browser-based application interface that detects, classifies, inspects, and sanitizes sensitive entities **entirely inside the user's browser memory** using validated and format-matched JavaScript detectors, an RFC 4180 structure-preserving CSV processor, before-and-after sanitization counts, and client-side Blob exports.
 
 ---
 
@@ -24,13 +24,13 @@ PrivacyForge eliminates server-side document ingestion: the document never leave
 
 ## Features
 
-### 1. Six Mandatory PII Categories with Validation
-- **Email Addresses**: RFC-aligned local/domain validation (rejects malformed patterns like `user@.com`, `@domain.com`, `user..name@domain.com`).
-- **Phone Numbers**: Supports Indian mobile (`+91 98765 43210`, `09876543210`, `9876543210`), Indian STD landlines (`+91-22-26543210`), and international formats (`(555) 123-4567`, `+1 415 555 2671`), while ignoring dates.
-- **IPv4 Addresses**: Strict dotted-quad validation rejecting octets outside `0–255` and leading-zero artifacts.
-- **Indian PAN Numbers**: Validates structural `[A-Z]{5}[0-9]{4}[A-Z]` format with token boundaries.
-- **Indian Aadhaar Formats**: Validates 12-digit UIDAI structural format (`2–9` leading digit, spaced/hyphenated/contiguous) while rejecting repeated-digit placeholders.
-- **Credit / Debit Card Numbers**: Enforces **Luhn checksum validation** (13–19 digits); random 16-digit numbers that fail Luhn are not classified as card numbers.
+### 1. Validated & Format-Matched PII Detection (Six Mandatory Categories)
+- **Email Addresses** *(Validated)*: RFC-aligned local/domain validation (rejects malformed patterns like `user@.com`, `@domain.com`, `user..name@domain.com`).
+- **Phone Numbers** *(Format-Matched & Normalized)*: Supports Indian mobile (`+91 98765 43210`, `09876543210`, `9876543210`), Indian STD landlines (`+91-22-26543210`), and international formats (`(555) 123-4567`, `+1 415 555 2671`), while ignoring dates.
+- **IPv4 Addresses** *(Validated)*: Strict dotted-quad validation rejecting octets outside `0–255` and leading-zero artifacts.
+- **Indian PAN Numbers** *(Format-Matched)*: Validates structural `[A-Z]{5}[0-9]{4}[A-Z]` format with token boundaries.
+- **Indian Aadhaar Formats** *(Format-Matched)*: Validates 12-digit UIDAI structural format (`2–9` leading digit, spaced/hyphenated/contiguous) while rejecting repeated-digit placeholders.
+- **Credit / Debit Card Numbers** *(Validated)*: Enforces **Luhn checksum validation** (13–19 digits); random 16-digit numbers that fail Luhn are not classified as card numbers.
 
 > **Verification Disclaimer**: Format matching for Indian PAN and Aadhaar validates structural conformance only and does **not** establish whether an identifier is genuine or belongs to a real individual.
 
@@ -45,10 +45,11 @@ PrivacyForge eliminates server-side document ingestion: the document never leave
 - Shares a single in-memory pseudonym map across all rows/columns of a CSV document.
 - Exports sanitized files (`<name>_sanitized.txt` / `<name>_sanitized.csv`) using the browser **Blob API**.
 
-### 4. Live Side-by-Side Comparison & Privacy-Safe Audit Summary
+### 4. Live Side-by-Side Comparison, Category Counts & Privacy-Safe Audit Summary
 - Live side-by-side **Original (inline highlighted)** vs **Sanitized** preview (plus a CSV Grid table view).
+- **Before-and-After Sanitization Metrics**: Live counts by category across all six PII classes alongside post-sanitization residual entity verification (`Remaining After Sanitization`).
 - Safe React text rendering—never uses `dangerouslySetInnerHTML` or `eval()`.
-- Filterable **Detection Inspector** with category badges, exact character offsets, and CSV row/column coordinates.
+- Filterable **Detection Inspector** with category filters, category badges, exact character offsets, and CSV row/column coordinates.
 - Optional **Audit Summary (`.json`)** export containing **only** category counts, match positions, and run metadata—never raw PII values or replacements.
 
 ---
@@ -129,7 +130,7 @@ Open the local URL printed by Vite (typically `http://localhost:5173`).
 1. Paste raw text into the editor, upload a `.txt` or `.csv` file, or click **Support Ticket (TXT)** / **Customer Export (CSV)** to load synthetic test data.
 2. Choose a redaction mode (**Full Mask**, **Partial Mask**, or **Consistent Pseudonymization**).
 3. Inspect highlighted matches in the **Original Document** pane alongside the **Sanitized Document Output** (or toggle **CSV Grid** for tabular inspection).
-4. Review category counts and match offsets in the **Six-Category Breakdown** and **Detection Inspector**.
+4. Review before-and-after counts and match offsets in the **Six-Category Breakdown** and **Detection Inspector**.
 5. Click **Download Sanitized TXT/CSV** to export via the Blob API, or **Audit Summary (.json)** for a PII-free compliance report.
 
 ---
@@ -160,6 +161,7 @@ npm run build
 
 ## Limitations & Future Improvements
 
+- **Selective Category Redaction Toggles**: Currently, users can filter the Detection Inspector by category while all six categories are sanitized; a planned enhancement will let users selectively toggle which PII categories to redact vs. retain.
 - **Pattern-Based Detection**: Deterministic regex + mathematical validation cannot detect unstructured free-form PII such as person names, physical street addresses, or contextual medical notes without an on-device NER model.
 - **Format vs. Issuance**: PAN and Aadhaar detectors validate format rules only and cannot verify whether an identifier is real or active.
 - **File Size**: Very large files (> 10 MB) are blocked to keep single-thread browser rendering responsive; future versions can offload detection to a **Web Worker** for streaming multi-megabyte datasets.
