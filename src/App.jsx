@@ -23,6 +23,7 @@ export default function App() {
   const [fileWarnings, setFileWarnings] = useState([]);
   const [activeCategoryFilter, setActiveCategoryFilter] = useState('all');
   const [selectedDetectionId, setSelectedDetectionId] = useState(null);
+  const [resetKey, setResetKey] = useState(0);
 
   const processed = useMemo(
     () =>
@@ -79,6 +80,7 @@ export default function App() {
     setFileWarnings([]);
     setActiveCategoryFilter('all');
     setSelectedDetectionId(null);
+    setResetKey((k) => k + 1);
   }, []);
 
   const handleDownloadSanitized = useCallback(() => {
@@ -91,7 +93,7 @@ export default function App() {
     const report = buildPrivacySafeAuditReport({
       stats: processed.stats,
       detections: processed.detections,
-      fileName,
+      hasSourceFile: Boolean(fileName),
     });
     exportAuditSummary(report, fileName);
   }, [processed, fileName]);
@@ -138,6 +140,7 @@ export default function App() {
           onSelectDetection={setSelectedDetectionId}
           onDownloadSanitized={handleDownloadSanitized}
           onDownloadAudit={handleDownloadAudit}
+          resetKey={resetKey}
         />
 
         <DetectionInspector
@@ -146,6 +149,7 @@ export default function App() {
           onCategoryFilterChange={setActiveCategoryFilter}
           selectedDetectionId={selectedDetectionId}
           onSelectDetection={setSelectedDetectionId}
+          resetKey={resetKey}
         />
 
         <PrivacyInfoSection />

@@ -102,15 +102,28 @@ export function processDocument({
 
 /**
  * Generates a privacy-safe JSON audit summary containing only counts, offsets,
- * and processing metadata. Original PII values and replacements are never included.
+ * and processing metadata. Original PII values, replacements, and raw original
+ * filenames are never included.
  */
-export function buildPrivacySafeAuditReport({ stats, detections, fileName = '' }) {
+export function buildPrivacySafeAuditReport({
+  stats,
+  detections,
+  fileName = '',
+  hasSourceFile,
+}) {
+  const isFileUpload =
+    typeof hasSourceFile === 'boolean' ? hasSourceFile : Boolean(fileName);
+  const sourceLabel = isFileUpload
+    ? `uploaded-${stats.fileType}-file`
+    : 'direct-text-input';
+
   return {
     application: 'PrivacyForge',
     generatedAt: new Date().toISOString(),
     processingArchitecture: 'Client-side browser memory only (no server upload)',
     source: {
-      fileName: fileName || 'direct-text-input',
+      inputOrigin: isFileUpload ? 'local-file-upload' : 'direct-text-input',
+      sourceLabel,
       fileType: stats.fileType,
       characterCount: stats.characterCount,
       lineCount: stats.lineCount,
@@ -136,6 +149,6 @@ export function buildPrivacySafeAuditReport({ stats, detections, fileName = '' }
         : {}),
     })),
     verificationDisclaimer:
-      'Aadhaar and PAN detections validate structural format patterns only and do not establish whether an identifier is genuine or belongs to a real individual. Credit card detection applies Luhn checksum validation.',
+      'Aadhaar and PAN detections validate structural format patterns only and do not establish whether an identifier is genuine or belongs to a real individual. Credit card detection applies Luhn checksum validation. This tool detects 6 structured PII categories only and does not detect unstructured PII such as person names, physical addresses, or free-text context. Manual review of sanitized output is recommended before sharing.',
   };
 }

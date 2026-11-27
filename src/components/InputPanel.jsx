@@ -172,6 +172,12 @@ export default function InputPanel({
           placeholder="Paste logs, support tickets, resumes, or CSV rows here — or upload a .txt / .csv file above..."
           rows={8}
           spellCheck={false}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          data-gramm="false"
+          data-gramm_editor="false"
+          data-enable-grammarly="false"
           className="pf-scroll w-full rounded-xl border border-slate-800 bg-navy-950 p-3.5 font-mono text-xs leading-relaxed text-slate-200 placeholder-slate-600 focus:border-emerald-500/60 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
         />
       </div>

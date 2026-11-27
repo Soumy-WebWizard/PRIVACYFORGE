@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Search, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { CATEGORY_ORDER, PII_CATEGORIES } from '../engine/constants.js';
 
@@ -8,8 +8,14 @@ export default function DetectionInspector({
   onCategoryFilterChange,
   selectedDetectionId,
   onSelectDetection,
+  resetKey,
 }) {
-  const [concealOriginals, setConcealOriginals] = useState(false);
+  const [concealOriginals, setConcealOriginals] = useState(true);
+
+  // P4: reset concealment back to default when workspace is cleared
+  useEffect(() => {
+    setConcealOriginals(true);
+  }, [resetKey]);
 
   const filtered = useMemo(() => {
     if (activeCategoryFilter === 'all') return detections;

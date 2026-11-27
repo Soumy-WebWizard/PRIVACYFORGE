@@ -88,7 +88,7 @@ export default function StatsPanel({ stats, activeCategoryFilter, onToggleCatego
           </p>
           <p className="mt-1 text-[11px] text-slate-400">
             {isCleanAfterSanitization
-              ? 'Post-redaction verification passed'
+              ? '0 structured patterns remain — manual review recommended'
               : 'Residual patterns detected in output'}
           </p>
         </div>
